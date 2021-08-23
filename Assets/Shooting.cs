@@ -27,46 +27,59 @@ public class Shooting : MonoBehaviour
         cam = Camera.main;
     }
 
-    void Update()// détection quand on tape sur l'écran
+    void Update()// détection quand on tape sur l'écran et envoyer le projectile
     {
 
-        for (int i = 0; i < Input.touchCount; ++i)
+        if (Input.touchCount > 0)// Sommes nous autorisé a tierr?
         {
-            if (Input.GetTouch(i).phase == TouchPhase.Began)
-            {
-                // Construct a ray from the current touch coordinates
-                Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(i).position);
+            if(Time.time - LastTimeShoot >= ShootRate)
+                Shoot();
+        }
+            /*     for (int i = 0; i < Input.touchCount; ++i)
+                    {
+                        if (Input.GetTouch(i).phase == TouchPhase.Began)
+                        {
+                            // Construct a ray from the current touch coordinates
+                            Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(i).position);
 
-                // Create a particle if hit
-                if (Physics.Raycast(ray))
+                            // Create a particle if hit
+                            if (Physics.Raycast(ray))
+                            {
+                                Instantiate(particle, transform.position, transform.rotation);
+                            }
+                        }
+                    }*/
+            /*if(Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+
+                if (touch.phase == TouchPhase.Began)
                 {
-                    Instantiate(particle, transform.position, transform.rotation);
+                    projectile.SetActive(true);
+
+                    Vector2 pos = touch.position;
+                    position = new Vector3(-pos.x, pos.y, 0.0f);
+                    transform.position = position;
+
                 }
-            }
-        }
-        /*if(Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
 
-            if (touch.phase == TouchPhase.Began)
+                if (touch.phase == TouchPhase.Ended)
+                {
+
+                }
+
+            }
+            if (Input.touchCount<0)
             {
-                projectile.SetActive(true);
-
-                Vector2 pos = touch.position;
-                position = new Vector3(-pos.x, pos.y, 0.0f);
-                transform.position = position;
-                
-            }
-
-            if (touch.phase == TouchPhase.Ended)
-            {
-               
-            }
-
+                Touch touch = Input.GetTouch(0);
+            }*/
         }
-        if (Input.touchCount<0)
-        {
-            Touch touch = Input.GetTouch(0);
-        }*/
+    void Shoot()
+    {
+        LastTimeShoot = Time.time;
+
+        GameObject proj = Instantiate(projectile, cam.transform.position, Quaternion.identity);
+
+        proj.GetComponent<Rigidbody>().velocity = cam.transform.forward * speedProjectile;
     }
 }
